@@ -4,7 +4,7 @@
 
 - https://github.com/RyabovNick/databasecourse_p1/tree/master/Theory/6_Functions#%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8
 - https://www.postgresql.org/docs/12/functions-string.html
-- https://github.com/RyabovNick/databasecourse_p1/tree/master/Tasks/2_Queries
+- https://github.com/RyabovNick/databasecourse_p1/tree/master/Tasks/2_Queries (однотабличные)
 
 ## hjhljh
 
