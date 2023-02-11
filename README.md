@@ -89,4 +89,70 @@ ALTER TABLE IF EXISTS public.hobby_students
 
 **jjhj**
 
-***jij***
+
+
+
+
+
+
+
+
+
+
+
+***10***
+```sql
+select *
+from
+	(
+	select left(st.n_group::varchar,1) course, count(st.id) hcount
+	from students st
+	Group by course
+	) total,
+	(
+	select left(st.n_group::varchar,1) course, count(st_count_hb.stud) count_st
+	from (
+		select  st.id stud, count(id_hb) count_hb
+		from students st, hobby_students hb_st
+		where st.id = hb_st.id_st 
+		Group by st.id
+		Having count(id_hb)>1
+		) st_count_hb, students st
+	where st.id = st_count_hb.stud
+	Group by course
+	)  count_st_usl
+		
+where total.course = count_st_usl.course and total.hcount/2 <= count_st
+```
+***11***
+```sql
+select *
+from
+	(
+	select n_group course, count(st.id) hcount
+	from students st
+	Group by course
+	) total,
+	(
+	select n_group course, count(st_count_hb.stud) score_n
+	from (
+		select  st.id stud, score count_hb
+		from students st, hobby_students hb_st
+		where score>=4 
+		Group by st.id
+		) st_count_hb, students st
+	where st.id = st_count_hb.stud
+	Group by course
+	)  count_st_usl
+		
+where total.course = count_st_usl.course and total.hcount/2.5 <= score_n
+```
+***12***
+```sql
+select aaa.n_group, count(n_group)
+from (select st.name, hb.name, n_group
+from hobby hb, hobby_students hb_st, students st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb and dt_finish is null
+group by st.name, hb.name, n_group) aaa
+group by aaa.n_group
+```
