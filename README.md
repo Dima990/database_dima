@@ -156,3 +156,14 @@ where st.id = hb_st.id_st and hb.id = hb_st.id_hb and dt_finish is null
 group by st.name, hb.name, n_group) aaa
 group by aaa.n_group
 ```
+
+***13***
+```sql
+SELECT st.id, st.name, st.surname, st.date_br, left(st.n_group::varchar,1) course
+FROM students st
+WHERE st.score = 4
+EXCEPT SELECT DISTINCT stb.id, stb.name, stb.surname, stb.date_br, left(stb.n_group::varchar,1) course
+FROM hobby_students sh, students stb
+WHERE stb.id = sh.id_st AND sh.dt_finish IS NULL
+ORDER BY course, date_br
+```
