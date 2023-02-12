@@ -167,3 +167,86 @@ FROM hobby_students sh, students stb
 WHERE stb.id = sh.id_st AND sh.dt_finish IS NULL
 ORDER BY course, date_br
 ```
+
+***14***
+```sql
+create OR REPLACE view student_v as
+select st.name, st.surname, st.score, st.date_br, (now()::date - hb_st.dt_start)/365 years
+from students st, hobby hb, hobby_students hb_st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb and dt_finish is not null and (now()::date - hb_st.dt_start)/365 >=5
+```
+
+***15***
+```sql
+select hb.name, count(hb_st.id_st)
+from hobby hb, students st, hobby_students hb_st
+where hb.id = hb_st.id_hb and st.id = hb_st.id_st
+group by hb.name
+```
+
+***16***
+```sql
+select hb.name, count(DISTINCT hb_st.id_st)
+from hobby hb, students st, hobby_students hb_st
+where hb.id = hb_st.id_hb and st.id = hb_st.id_st
+group by hb.name
+order by count desc
+limit 1
+```
+
+***17***
+```sql
+select st.name, st.surname, st.score, st.date_br
+from students st, hobby_students hb_st
+where st.id = hb_st.id_st  and hb_st.id_hb =(select hb.id
+											 from hobby hb, students st, hobby_students hb_st
+											 where hb.id = hb_st.id_hb and st.id = hb_st.id_st
+											 group by hb.id
+											 order by  count(DISTINCT hb_st.id_st) desc
+											 limit 1)
+```
+
+***18***
+```sql
+select hb.id, hb.risk
+from hobby hb
+order by risk desc
+limit 3
+```
+
+***19***
+```sql
+select st.id , now()::date - hb_st.dt_start days
+from students st, hobby hb, hobby_students hb_st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb and dt_finish is not null 
+order by days desc
+limit 10
+```
+
+***20***
+```sql
+select *
+from (select n_group
+from students st, hobby hb, hobby_students hb_st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb and dt_finish is not null 
+order by now()::date - hb_st.dt_start desc
+limit 10) gr
+group by gr.n_group
+```
+
+***21***
+```sql
+create OR REPLACE view student_bal as
+select st.name, st.surname
+from students st
+order by score
+```
+
+***22***
+```sql
+SELECT DISTINCT ON (1) LEFT(st.n_group::VARCHAR,1) cours, hb.id
+FROM students st, hobby hb, hobby_students hb_st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb 
+GROUP BY LEFT(st.n_group::VARCHAR,1), hb.id
+ORDER BY LEFT(st.n_group::VARCHAR,1), COUNT(hb.id) DESC
+```
