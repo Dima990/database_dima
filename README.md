@@ -250,3 +250,54 @@ where st.id = hb_st.id_st and hb.id = hb_st.id_hb
 GROUP BY LEFT(st.n_group::VARCHAR,1), hb.id
 ORDER BY LEFT(st.n_group::VARCHAR,1), COUNT(hb.id) DESC
 ```
+***23***
+```sql
+create OR REPLACE view student_risc as
+select op.id, hb.risk
+from hobby hb,
+(SELECT  LEFT(st.n_group::VARCHAR,1) cours, hb.id
+FROM students st, hobby hb, hobby_students hb_st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb and LEFT(st.n_group::VARCHAR,1) = '1'
+GROUP BY LEFT(st.n_group::VARCHAR,1), hb.id
+ORDER BY LEFT(st.n_group::VARCHAR,1), COUNT(hb.id) DESC) op
+order by risk desc
+limit 1
+```
+***24***
+```sql
+select count(bar) otl 
+from(SELECT st.id
+FROM students st
+WHERE st.score = 4 and LEFT(st.n_group::VARCHAR,1) ='1') bar;
+select count(chel) bomji
+from(select std.id
+from students std
+where LEFT(std.n_group::VARCHAR,1) ='1') chel
+```
+***25***
+```sql 
+create OR REPLACE view popular as
+select hb.name, count(DISTINCT hb_st.id_st)
+from hobby hb, students st, hobby_students hb_st
+where hb.id = hb_st.id_hb and st.id = hb_st.id_st
+group by hb.name
+order by count desc
+limit 1
+```
+***27***
+```sql
+select max(ask.score), min(ask.score), avg(ask.score)
+from students st,
+(select st.id, st.score
+from students st
+where left(st.name::varchar,1) = 'В') ask
+```
+***29***
+```sql
+select aaa.date_br, count(n_group)
+from (select st.name, hb.name, n_group, date_br
+from hobby hb, hobby_students hb_st, students st
+where st.id = hb_st.id_st and hb.id = hb_st.id_hb 
+group by st.name, hb.name, n_group,date_br) aaa
+group by aaa.date_br 
+```
